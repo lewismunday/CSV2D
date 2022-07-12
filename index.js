@@ -33,10 +33,13 @@ const fileSelector = document.getElementById('file-selector');
 fileSelector.addEventListener('change', (event) => {
   // Grabs file and check if CSV
   const fileList = event.target.files[0];
+  if (event.target.files.length > 1){
+    alert('Please select only 1 file.')
+    return;
+  }
   if (fileList.type && !fileList.type.startsWith('text/csv')) {
-    console.log('File is not a csv.', fileList.type, fileList);
-  } else {
-    console.log(fileList);
+    alert('File is not a csv.');
+    return;
   }
 
   const reader = new FileReader();
@@ -49,7 +52,6 @@ fileSelector.addEventListener('change', (event) => {
       if (lines.length === bytes) {
         line_array = line_array.splice(0, line_array.length - 1);
       }
-      console.log(line_array)
       let objectArray = line_array.toString().split(',')
 
       let dict = {}
@@ -61,10 +63,10 @@ fileSelector.addEventListener('change', (event) => {
           dict[previousElement] = null;
         } else {
           dict[previousElement] = objectArray[i]
+          dict[previousElement] = objectArray[i]
         }
       }
 
-      console.log(objectArray)
       document.getElementById('obj-display').value = JSON.stringify(dict);
     }
     fileList.src = event.target.result;
@@ -83,7 +85,6 @@ async function copyText() {
 
   /* Copy the text inside the text field */
   navigator.clipboard.writeText(copyText.value).then(function() {
-    console.log('Async: Copying to clipboard was successful!');
   }, function(err) {
     console.error('Async: Could not copy text: ', err);
   });
